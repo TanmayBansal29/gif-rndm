@@ -15,13 +15,15 @@ To learn more, check out the JavaScript Fetch API section.
 
 Use the JSONPlaceholder service to fetch fake "todo" items and display the titles on the page:
 
-Example:Get your own React.js Server
-index.js:
+<h3>Example:Get your own React.js Server</h3>
 
+<p>index.js:</p>
+
+<span>
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 
-<div>
+
   const Home = () => {
   const [data, setData] = useState(null);
 
@@ -40,16 +42,19 @@ import ReactDOM from "react-dom/client";
     </>
   );
 };
-</div>
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Home />);
+
+</span>
 
 The fetch logic may be needed in other components as well, so we will extract that into a custom Hook.
 
 Move the fetch logic to a new file to be used as a custom Hook:
 
-Example:
+<h3>Example:</h3>
+<div>
 useFetch.js:
 
 import { useState, useEffect } from "react";
@@ -88,7 +93,10 @@ const Home = () => {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Home />);
 
-Example Explained
+</div>
+
+<h3>Example Explained</h3>
+
 We have created a new file called useFetch.js containing a function called useFetch which contains all of the logic needed to fetch our data.
 
 We removed the hard-coded URL and replaced it with a url variable that can be passed to the custom Hook.
