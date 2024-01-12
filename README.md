@@ -1,4 +1,5 @@
-React Custom Hooks
+<h1>CUSTOM REACT HOOKS</h1>
+
 Hooks are reusable functions.
 
 When you have component logic that needs to be used by multiple components, we can extract that logic to a custom Hook.
@@ -20,7 +21,8 @@ index.js:
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 
-const Home = () => {
+<div>
+  const Home = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -38,6 +40,7 @@ const Home = () => {
     </>
   );
 };
+</div>
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Home />);
