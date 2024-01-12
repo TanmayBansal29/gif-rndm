@@ -1,70 +1,97 @@
-# Getting Started with Create React App
+React Custom Hooks
+Hooks are reusable functions.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+When you have component logic that needs to be used by multiple components, we can extract that logic to a custom Hook.
 
-## Available Scripts
+Custom Hooks start with "use". Example: useFetch.
 
-In the project directory, you can run:
+Build a Hook
+In the following code, we are fetching data in our Home component and displaying it.
 
-### `npm start`
+We will use the JSONPlaceholder service to fetch fake data. This service is great for testing applications when there is no existing data.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+To learn more, check out the JavaScript Fetch API section.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Use the JSONPlaceholder service to fetch fake "todo" items and display the titles on the page:
 
-### `npm test`
+Example:Get your own React.js Server
+index.js:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+import { useState, useEffect } from "react";
+import ReactDOM from "react-dom/client";
 
-### `npm run build`
+const Home = () => {
+  const [data, setData] = useState(null);
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/todos")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+ }, []);
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  return (
+    <>
+      {data &&
+        data.map((item) => {
+          return <p key={item.id}>{item.title}</p>;
+        })}
+    </>
+  );
+};
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Home />);
 
-### `npm run eject`
+The fetch logic may be needed in other components as well, so we will extract that into a custom Hook.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Move the fetch logic to a new file to be used as a custom Hook:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Example:
+useFetch.js:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+import { useState, useEffect } from "react";
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+const useFetch = (url) => {
+  const [data, setData] = useState(null);
 
-## Learn More
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, [url]);
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  return [data];
+};
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+export default useFetch;
+index.js:
 
-### Code Splitting
+import ReactDOM from "react-dom/client";
+import useFetch from "./useFetch";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+const Home = () => {
+  const [data] = useFetch("https://jsonplaceholder.typicode.com/todos");
 
-### Analyzing the Bundle Size
+  return (
+    <>
+      {data &&
+        data.map((item) => {
+          return <p key={item.id}>{item.title}</p>;
+        })}
+    </>
+  );
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Home />);
 
-### Making a Progressive Web App
+Example Explained
+We have created a new file called useFetch.js containing a function called useFetch which contains all of the logic needed to fetch our data.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+We removed the hard-coded URL and replaced it with a url variable that can be passed to the custom Hook.
 
-### Advanced Configuration
+Lastly, we are returning our data from our Hook.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+In index.js, we are importing our useFetch Hook and utilizing it like any other Hook. This is where we pass in the URL to fetch data from.
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Now we can reuse this custom Hook in any component to fetch data from any URL.
